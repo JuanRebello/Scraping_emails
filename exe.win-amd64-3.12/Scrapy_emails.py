@@ -1,13 +1,13 @@
 import customtkinter as ctk
 from tkinter import filedialog
-from appnovo import iniciar_selenium  # Assegure-se de que iniciar_selenium está importado corretamente
+from appnovo import iniciar_selenium  
 import threading
 
 class MyApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        # Configurações básicas da janela
+        
         self.title("Extração de emails")
         self.geometry("400x600")
 
@@ -15,7 +15,7 @@ class MyApp(ctk.CTk):
         self.pause_duration = 0
         self.is_running = False
         self.automation_thread = None
-        self.filepath = None  # Inicializa a variável filepath
+        self.filepath = None  
 
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
@@ -37,7 +37,7 @@ class MyApp(ctk.CTk):
 
         self.url_quantity_options = [str(i) for i in range(10, 101, 10)]
         self.url_quantity_menu = ctk.CTkOptionMenu(self.main_frame, values=self.url_quantity_options)
-        self.url_quantity_menu.set('Escolha o lote')  # Define o texto padrão
+        self.url_quantity_menu.set('Escolha o lote')  
         self.url_quantity_menu.pack(pady=10, padx=10)
 
         self.pause_label = ctk.CTkLabel(self.main_frame, text="Pausa entre os lotes:")
@@ -60,7 +60,7 @@ class MyApp(ctk.CTk):
     def choose_file(self):
         self.filepath = filedialog.askopenfilename(title="Escolher arquivo", filetypes=[("Arquivos Excel", "*.xlsx")])
         if self.filepath:
-            self.output_path = self.filepath.replace(".xlsx", " Atualizado.xlsx")  # Define o caminho do arquivo de saída
+            self.output_path = self.filepath.replace(".xlsx", " Atualizado.xlsx") 
             self.file_label.configure(text=f"Arquivo escolhido: {self.filepath}")
 
     def set_pause_duration(self, value):
@@ -70,10 +70,10 @@ class MyApp(ctk.CTk):
             self.pause_duration = int(value[:-3]) * 60
 
     def start_scanning(self):
-        if not self.is_running and self.filepath:  # Verifica se o arquivo foi escolhido
+        if not self.is_running and self.filepath:  
             self.is_running = True
             self.feedback_label.configure(text="Automação em execução")
-            self.pause_message_label.configure(text="")  # Limpa a mensagem de pausa
+            self.pause_message_label.configure(text="")  
             self.automation_thread = threading.Thread(target=self.run_automation)
             self.automation_thread.start()
         elif not self.filepath:
@@ -89,7 +89,7 @@ class MyApp(ctk.CTk):
             self.feedback_label.configure(text="Automação finalizada")
 
     def update_pause_message(self, message):
-        self.pause_message_label.configure(text=message)  # Atualiza a mensagem de pausa
+        self.pause_message_label.configure(text=message)  
 
     def show_pause_message(self, duration):
         self.pause_message_label.configure(text=f"Execução em pausa por {duration} segundos")

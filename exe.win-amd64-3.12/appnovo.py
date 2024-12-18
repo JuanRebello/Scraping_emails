@@ -22,7 +22,7 @@ def iniciar_driver():
     driver = webdriver.Chrome(options=chrome_options)
     wait = WebDriverWait(
         driver,
-        10,  # Tempo máximo de espera
+        10,  
         poll_frequency=1,
         ignored_exceptions=[
             NoSuchElementException,
@@ -59,21 +59,21 @@ def limpar_prefixo_email(email):
     return None
 
 def converter_tempo_pausa(pausa):
-    """Converte a string de pausa escolhida pelo usuário em segundos."""
+    
     if pausa.endswith("s"):
-        return int(pausa[:-1])  # Remove 's' e converte para int
+        return int(pausa[:-1]) 
     elif pausa.endswith("min"):
-        return int(pausa[:-3]) * 60  # Remove 'min' e converte para minutos
+        return int(pausa[:-3]) * 60  
     elif pausa.isdigit():
-        return int(pausa)  # Caso tenha sido passado um número sem sufixo
+        return int(pausa)  
     return 0
 
 def iniciar_selenium(arquivo_excel_path, url_quantity, tempo_pausa, update_pause_message):
-    # Carregar o arquivo Excel selecionado
+   
     arquivo_excel = load_workbook(arquivo_excel_path)
     sheet = arquivo_excel.active
 
-    # Lista de URLs
+    
     urls = []
     for linhas in sheet.iter_rows(min_row=2, min_col=1, max_col=1, values_only=True):
         if linhas[0] is not None:
@@ -83,7 +83,7 @@ def iniciar_selenium(arquivo_excel_path, url_quantity, tempo_pausa, update_pause
     driver, wait = iniciar_driver()
     tempo_pausa = converter_tempo_pausa(tempo_pausa)
 
-    total_urls = len(urls)  # Obter o total de URLs
+    total_urls = len(urls)  
     for start_idx in range(0, total_urls, url_quantity):
         batch_urls = urls[start_idx:start_idx + url_quantity]
         
@@ -93,7 +93,7 @@ def iniciar_selenium(arquivo_excel_path, url_quantity, tempo_pausa, update_pause
                 driver.get(url)
                 sleep(3)
 
-                # Buscar e-mails no site
+                
                 emails_encontrados = buscar_emails(driver, wait)
 
                 if emails_encontrados:
@@ -105,7 +105,7 @@ def iniciar_selenium(arquivo_excel_path, url_quantity, tempo_pausa, update_pause
 
             except Exception as e:
                 print(f"Erro ao acessar {url}: {e}")
-                # Registra "site em erro" na coluna B (ou onde preferir)
+                
                 if 'invalid argument' in str(e).lower():
                     sheet.cell(row=idx, column=2).value = 'Site em erro'
                 else:
@@ -114,9 +114,9 @@ def iniciar_selenium(arquivo_excel_path, url_quantity, tempo_pausa, update_pause
             sleep(3)
 
         print(f"Pausando por {tempo_pausa} segundos...")
-        update_pause_message(f'execução pausada {tempo_pausa}(s) ')  # Atualiza a mensagem na interface
+        update_pause_message(f'execução pausada {tempo_pausa}(s) ') 
         sleep(tempo_pausa)
-        update_pause_message("")  # Limpa a mensagem após a pausa
+        update_pause_message("")  
     
     arquivo_excel.save(arquivo_excel_path.replace(".xlsx", " Atualizado.xlsx"))
     driver.quit()
